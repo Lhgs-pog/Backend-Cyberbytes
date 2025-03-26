@@ -21,7 +21,7 @@ public class Pagina {
     @Column(name = "id", nullable = false)
     private String id;
     @Column(name = "titulo1", nullable = false)
-    private String tituloPrinciapl;
+    private String tituloPrinciapal;
     @Column(name = "titulo2")
     private String tituloSecunario;
     @Column(name = "conteudo1", nullable = false)
