@@ -24,6 +24,10 @@ public class PaginaService {
     }
 
     public PaginaResponseDto getPaginaByTitulo(String titulo){
+
+        if(titulo.isBlank() || titulo == null)
+            return null;
+
         Pagina pagina = repository.findByTitulo1(titulo);
 
         PaginaResponseDto dto = new PaginaResponseDto(pagina);
@@ -32,6 +36,10 @@ public class PaginaService {
     }
 
     public ResponseEntity savePagina(PaginaRequestDto dto){
+
+        if (repository.findByTitulo1(dto.tituloPrincipal()) != null)
+            return ResponseEntity.badRequest().body("Este título já existe");
+
         Pagina pagina = new Pagina(dto);
 
         repository.save(pagina);
@@ -40,6 +48,10 @@ public class PaginaService {
     }
 
     public ResponseEntity updatePagina(PaginaRequestDto dto){
+
+        if (repository.findByTitulo1(dto.tituloPrincipal()) == null)
+            return ResponseEntity.badRequest().body("Nenhuma página com este título");
+
         Pagina paginaExistente = repository.findByTitulo1(dto.tituloPrincipal());
 
         paginaExistente.setTituloPrinciapal(dto.tituloPrincipal());
@@ -54,6 +66,10 @@ public class PaginaService {
     }
 
     public ResponseEntity deletePagina(PaginaRequestDto dto){
+
+        if (repository.findByTitulo1(dto.tituloPrincipal()) == null)
+            return ResponseEntity.badRequest().body("Nenhuma página com este título");
+
         Pagina pagina = repository.findByTitulo1(dto.tituloPrincipal());
 
         repository.deleteById(pagina.getId());
