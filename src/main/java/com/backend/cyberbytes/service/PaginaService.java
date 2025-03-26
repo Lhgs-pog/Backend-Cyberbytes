@@ -23,6 +23,14 @@ public class PaginaService {
                 .toList();
     }
 
+    public PaginaResponseDto getPaginaByTitulo(String titulo){
+        Pagina pagina = repository.findByTitulo1(titulo);
+
+        PaginaResponseDto dto = new PaginaResponseDto(pagina);
+
+        return dto;
+    }
+
     public ResponseEntity savePagina(PaginaRequestDto dto){
         Pagina pagina = new Pagina(dto);
 
