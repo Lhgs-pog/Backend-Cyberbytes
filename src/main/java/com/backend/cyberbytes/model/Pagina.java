@@ -1,5 +1,6 @@
 package com.backend.cyberbytes.model;
 
+import com.backend.cyberbytes.dto.PaginaRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +21,7 @@ public class Pagina {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private String id;
-    @Column(name = "titulo1", nullable = false)
+    @Column(name = "titulo1", nullable = false, unique = true)
     private String tituloPrinciapal;
     @Column(name = "titulo2")
     private String tituloSecunario;
@@ -30,4 +31,12 @@ public class Pagina {
     private String conteudo2;
     @Column(name = "conteudo3")
     private String conteudo3;
+
+    public Pagina(PaginaRequestDto dto){
+        this.tituloPrinciapal=dto.tituloPrincipal();
+        this.tituloSecunario=dto.tituloSecundario();
+        this.conteudo1=dto.conteudo1();
+        this.conteudo2=dto.conteudo2();
+        this.conteudo3=dto.conteudo3();
+    }
 }
