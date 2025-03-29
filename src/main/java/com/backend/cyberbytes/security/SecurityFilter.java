@@ -37,10 +37,10 @@ public class SecurityFilter extends OncePerRequestFilter {
             System.out.println("O email é: " +email);
             //Recupera dados e autoridade do usuário
             var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            //Salva o contexto de segurança do spring para que durante toda a requisição do endpoint reconhça o usuário estando autenticado
+            //Salva o contexto de segurança do spring para que durante toda a requisição do endpoint reconheça o usuário estando autenticado
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        //Permite que a requisição continue seu procesamento pelos demais filtros
+        //Permite que a requisição continue seu processamento pelos demais filtros
         filterChain.doFilter(request, response);
     }
 

@@ -38,8 +38,21 @@ public class SecurityConfig {
                 //Configura os endpoints
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+
+
+                        // Configurações do RestController /user
+                        .requestMatchers(HttpMethod.GET, "/user/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/user/{id}").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/user/{id}").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/user").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/user/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user").permitAll()
+
+                        //Configurações do RestController /auth
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+
+
                         .anyRequest().authenticated()
                 )
 
