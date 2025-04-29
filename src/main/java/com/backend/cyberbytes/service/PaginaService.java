@@ -37,7 +37,7 @@ public class PaginaService {
 
     public ResponseEntity savePagina(PaginaRequestDto dto){
 
-        if (repository.findByTitulo1(dto.tituloPrincipal()) != null)
+        if (repository.findByTitulo1(dto.titulo1()) != null)
             return ResponseEntity.badRequest().body("Este título já existe");
 
         Pagina pagina = new Pagina(dto);
@@ -49,13 +49,13 @@ public class PaginaService {
 
     public ResponseEntity updatePagina(PaginaRequestDto dto){
 
-        if (repository.findByTitulo1(dto.tituloPrincipal()) == null)
+        if (repository.findByTitulo1(dto.titulo1()) == null)
             return ResponseEntity.badRequest().body("Nenhuma página com este título");
 
-        Pagina paginaExistente = repository.findByTitulo1(dto.tituloPrincipal());
+        Pagina paginaExistente = repository.findByTitulo1(dto.titulo1());
 
-        paginaExistente.setTituloPrinciapal(dto.tituloPrincipal());
-        paginaExistente.setTituloSecunario(dto.tituloSecundario());
+        paginaExistente.setTitulo1(dto.titulo1());
+        paginaExistente.setTitulo2(dto.titulo2());
         paginaExistente.setConteudo1(dto.conteudo1());
         paginaExistente.setConteudo2(dto.conteudo2());
         paginaExistente.setConteudo3(dto.conteudo3());
@@ -67,10 +67,10 @@ public class PaginaService {
 
     public ResponseEntity deletePagina(PaginaRequestDto dto){
 
-        if (repository.findByTitulo1(dto.tituloPrincipal()) == null)
+        if (repository.findByTitulo1(dto.titulo1()) == null)
             return ResponseEntity.badRequest().body("Nenhuma página com este título");
 
-        Pagina pagina = repository.findByTitulo1(dto.tituloPrincipal());
+        Pagina pagina = repository.findByTitulo1(dto.titulo1());
 
         repository.deleteById(pagina.getId());
 
