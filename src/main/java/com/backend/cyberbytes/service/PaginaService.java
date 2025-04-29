@@ -14,8 +14,11 @@ import java.util.List;
 public class PaginaService {
 
     @Autowired
-    PaginaRepository repository;
+    private PaginaRepository repository;
 
+    /*
+     * Retorna todas as páginas
+     * */
     public List<PaginaResponseDto> getAllPaginas(){
         return repository.findAll()
                 .stream()
@@ -23,9 +26,12 @@ public class PaginaService {
                 .toList();
     }
 
+    /*
+     * Retorna uma página pelo título
+     * */
     public PaginaResponseDto getPaginaByTitulo(String titulo){
 
-        if(titulo.isBlank() || titulo == null)
+        if(titulo == null || titulo.isBlank())
             return null;
 
         Pagina pagina = repository.findByTitulo1(titulo);
@@ -35,6 +41,10 @@ public class PaginaService {
         return dto;
     }
 
+
+    /*
+     * Salva uma página
+     * */
     public ResponseEntity savePagina(PaginaRequestDto dto){
 
         if (repository.findByTitulo1(dto.titulo1()) != null)
@@ -47,6 +57,9 @@ public class PaginaService {
         return ResponseEntity.ok("Página criada com sucesso");
     }
 
+    /*
+     * Atualiza uma página
+     * */
     public ResponseEntity updatePagina(PaginaRequestDto dto){
 
         if (repository.findByTitulo1(dto.titulo1()) == null)
@@ -65,6 +78,9 @@ public class PaginaService {
         return ResponseEntity.ok("Página atualizada com sucesso");
     }
 
+    /*
+     * Deleta uma página
+     * */
     public ResponseEntity deletePagina(PaginaRequestDto dto){
 
         if (repository.findByTitulo1(dto.titulo1()) == null)
