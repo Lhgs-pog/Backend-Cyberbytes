@@ -48,6 +48,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/user/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user").permitAll()
 
+                        // Configurações do RestController /pagina
+                        .requestMatchers(HttpMethod.GET, "/pagina/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/pagina").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/pagina").hasRole("ADMIN")
+
+
                         //Configurações do RestController /auth
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
