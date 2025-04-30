@@ -12,8 +12,8 @@ import java.util.UUID;
 @Getter
 @Setter
 
-@Table(name = "Pagina")
-@Entity(name = "Pagina")
+@Table(name = "Page")
+@Entity(name = "Page")
 
 @EqualsAndHashCode(of = "id")
 @Component
@@ -23,15 +23,15 @@ public class Pagina {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private String id;
-    @Column(name = "titulo1", nullable = false, unique = true)
+    @Column(name = "title", nullable = false, unique = true)
     private String titulo1;
-    @Column(name = "titulo2")
+    @Column(name = "subtitle")
     private String titulo2;
-    @Column(name = "conteudo1", nullable = false)
+    @Column(name = "introduction", nullable = false)
     private String conteudo1;
-    @Column(name = "conteudo2")
+    @Column(name = "content")
     private String conteudo2;
-    @Column(name = "conteudo3")
+    @Column(name = "conclusion")
     private String conteudo3;
 
     public Pagina(PaginaRequestDto dto){
