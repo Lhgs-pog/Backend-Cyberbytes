@@ -23,11 +23,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CodigoService codigoService;
+
+    @Autowired
+    private EmailService emailService;
+
     /*
      * Salva um novo usuário no banco de dados
      * Observação: Por enquanto sem a implementação do código
      * */
-    public ResponseEntity registerUser(UserRequestDto data){
+    public ResponseEntity registerUser(UserRequestDto data, int tentativa){
         //Verificando se o usuário existe
         if (userRepository.findByEmail(data.email()) != null)
             return ResponseEntity.badRequest().body("Este email de usuário já existe");
@@ -42,8 +48,12 @@ public class UserService {
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         user.setPassword(encryptedPassword);
 
-        userRepository.save(user);
-        return ResponseEntity.ok("Usuário salvo com sucesso!");
+        //Verifica se o código gerado é o mesmo informado
+        if (codigoService.verificarCodigo(data.email(),tentativa)) {
+            userRepository.save(user);
+            return ResponseEntity.ok("Usuario salvo com sucesso");
+        }
+        return ResponseEntity.badRequest().body("Código expirado ou tentativa inválida. Faça uma nova tentaiva de criar uma conta para tentar novamente");
     }
 
     /*

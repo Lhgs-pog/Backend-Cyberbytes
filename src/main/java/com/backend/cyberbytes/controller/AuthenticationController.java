@@ -11,10 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
@@ -51,9 +48,9 @@ public class AuthenticationController {
      * Função para fazer o registro do usuário
      * */
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Valid UserRequestDto data){
+    public ResponseEntity register(@RequestBody @Valid UserRequestDto data, @RequestParam("tentativa") int tentativa){
         try {
-            return userService.registerUser(data);
+            return userService.registerUser(data, tentativa);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

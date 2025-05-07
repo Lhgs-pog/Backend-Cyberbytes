@@ -4,8 +4,10 @@ package com.backend.cyberbytes.controller;
 import com.backend.cyberbytes.dto.UserRequestDto;
 import com.backend.cyberbytes.dto.UserResponseDto;
 import com.backend.cyberbytes.model.User;
+import com.backend.cyberbytes.service.CodigoService;
 import com.backend.cyberbytes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CodigoService codigoService;
     /*
      * Retorna todos os usuários
      * */
@@ -42,6 +46,16 @@ public class UserController {
     @GetMapping("/email/{email}")
     public Optional<User> getUserByEmail(@PathVariable("email")String email){
         return userService.findUsuarioByEmail(email);
+    }
+
+    @PostMapping("/codigo")
+    public ResponseEntity<String> gerarCodigo(@PathVariable("email") String email){
+        try {
+            codigoService.salvarCodigo(email);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body("Ouve um erro ao gerar um código");
+        }
+        return ResponseEntity.status(HttpStatusCode.valueOf(202)).body("Um email contendo o código de verificação foi enviado");
     }
 
     /*
