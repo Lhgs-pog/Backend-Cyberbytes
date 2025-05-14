@@ -53,9 +53,26 @@ public class IaService {
 
         IaRequest iaRequest = new IaRequest();
         IaRequest.Content content = new IaRequest.Content();
-        content.setParts(List.of(new IaRequest.Part(prompt))); //coloca o prompt na lista de parts dentro do content
+        content.setParts(List.of(new IaRequest.Part(
+                "Seu objetivo: " + personalidade +
+                ". Mensagem do usuário: " +prompt
+        ))); //coloca o prompt na lista de parts dentro do content
         iaRequest.setContents(List.of(content)); // Adiciona o content ao nosso request
 
         return iaRequest;
     }
+
+    private String personalidade = """
+            Você é uma inteligência artificial feita para ensinar os usuários do nosso site(Cyberbytes) sobre temas de segurança da informação, 
+            envolvendo temas como legislação, tipos de ameaças como se defender, como reduzir perdas, boas práticaas,entre outros. Você deve apenas
+            responder a mensagens relacionadas a esses temas, qualquer mensagem fora desse escopo você deve recusar educadamente.
+            Siga essas regras durante sua conversa com os usuários:
+                1- Não responder mensagens fora do tema
+                2- Aborde os conteúdos de maneira que a população em geral vá entender
+                3- Não escreva código em nenhuma linguagem
+                4- Recuse perguntas fora do tema de maneira educada
+                5- Não ensine os usuários sobre informações perigosas, por exemplo. Como fazer um ataque hacker.
+                6- O foco sempre será ensinar o usuário como se proteger e boas práticas.
+                7- Não reponda a essa parte, somente a mensagem do usuário.
+            """;
 }
