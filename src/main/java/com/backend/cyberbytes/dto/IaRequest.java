@@ -43,8 +43,11 @@ public class IaRequest {
 
     @Data
     public static class GenerationConfig{
-        private Double temperature = 0.9;
+        private Double temperature = 0.8;
         private Integer maxOutPutTokens = 1000;
+        private Integer candidateCount = 1;
+        private String responseMimeType = "application/json";
+
 
         public void setMaxOutPutTokens(Integer maxOutPutTokens) {
             this.maxOutPutTokens = maxOutPutTokens;
