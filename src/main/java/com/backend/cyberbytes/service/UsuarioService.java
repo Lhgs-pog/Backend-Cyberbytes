@@ -1,11 +1,11 @@
 package com.backend.cyberbytes.service;
 
-import com.backend.cyberbytes.dto.UserRequestDto;
-import com.backend.cyberbytes.dto.UserResponseDto;
+import com.backend.cyberbytes.dto.UsuarioRequestDto;
+import com.backend.cyberbytes.dto.UsuarioResponseDto;
 import com.backend.cyberbytes.exceptions.ResourceNotFoundException;
-import com.backend.cyberbytes.model.User;
-import com.backend.cyberbytes.model.UserRole;
-import com.backend.cyberbytes.repository.UserRepository;
+import com.backend.cyberbytes.model.Usuario;
+import com.backend.cyberbytes.model.UsuarioRole;
+import com.backend.cyberbytes.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UsuarioService {
 
     //Dependencias
     @Autowired
-    private UserRepository userRepository;
+    private UsuarioRepository userRepository;
 
     @Autowired
     private CodigoService codigoService;
@@ -33,24 +33,24 @@ public class UserService {
      * Salva um novo usuário no banco de dados
      * Observação: Por enquanto sem a implementação do código
      * */
-    public ResponseEntity registerUser(UserRequestDto data, int tentativa){
+    public ResponseEntity registerUser(UsuarioRequestDto data, int tentativa){
         //Verificando se o usuário existe
         if (userRepository.findByEmail(data.email()) != null)
             return ResponseEntity.badRequest().body("Este email de usuário já existe");
 
         //Definindo um usuário
-        User user = new User();
-        user.setName(data.name());
-        user.setEmail(data.email());
-        user.setRole(UserRole.USER);
+        Usuario usuario = new Usuario();
+        usuario.setNome(data.nome());
+        usuario.setEmail(data.email());
+        usuario.setRole(UsuarioRole.USER);
 
         //Criptografando a senha
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        user.setPassword(encryptedPassword);
+        String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
+        usuario.setSenha(encryptedPassword);
 
         //Verifica se o código gerado é o mesmo informado
         if (codigoService.verificarCodigo(data.email(),tentativa)) {
-            userRepository.save(user);
+            userRepository.save(usuario);
             return ResponseEntity.ok("Usuario salvo com sucesso");
         }
         return ResponseEntity.badRequest().body("Código expirado ou tentativa inválida. Faça uma nova tentaiva de criar uma conta para tentar novamente");
@@ -59,23 +59,23 @@ public class UserService {
     /*
    Retorna todos os usuários
    */
-    public List<UserResponseDto> findAllUsuarios(){
+    public List<UsuarioResponseDto> findAllUsuarios(){
         return userRepository.findAll().stream()
-                .map(UserResponseDto::new)
+                .map(UsuarioResponseDto::new)
                 .toList();
     }
 
     /*
     Retorna um usuário específico pelo id dele
     * */
-    public Optional<User> findUsuarioById(String id){
+    public Optional<Usuario> findUsuarioById(String id){
         return userRepository.findById(id);
     }
 
     /*
     Retorna um usuário específico pelo Email dele
     * */
-    public Optional<User> findUsuarioByEmail(String email){
+    public Optional<Usuario> findUsuarioByEmail(String email){
         return userRepository.findOptionalByEmail(email);
     }
 
@@ -83,27 +83,27 @@ public class UserService {
     Atualizar o usuário
     * */
     @Transactional
-    public ResponseEntity<User> updateUser(String id, UserRequestDto newUser){
+    public ResponseEntity<Usuario> updateUser(String id, UsuarioRequestDto newUser){
         //Verifica se o usuário existe
-        User userExists = userRepository.findById(id)
+        Usuario userExists = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado"));
 
         //Verifica se o email novo já existe
-        Optional<User> userEmail = userRepository.findOptionalByEmail(newUser.email());
+        Optional<Usuario> userEmail = userRepository.findOptionalByEmail(newUser.email());
         if (userEmail.isPresent() && !userEmail.get().getId().equals(userExists.getId())){
             throw new DataIntegrityViolationException("Já existe um usuário com este email");
         }
 
         //Atualiza o nome
-        userExists.setName(newUser.name());
+        userExists.setNome(newUser.nome());
         //Atualiza o email
         userExists.setEmail(newUser.email());
 
         //Criptografando nova senha
-        String encryptedPassword = new BCryptPasswordEncoder().encode(newUser.password());
+        String encryptedPassword = new BCryptPasswordEncoder().encode(newUser.senha());
 
         //Mudando a senha para a nova
-        userExists.setPassword(encryptedPassword);
+        userExists.setSenha(encryptedPassword);
 
         userRepository.save(userExists);
 
@@ -114,10 +114,10 @@ public class UserService {
      * Deleta um usuário específico
      * */
     @Transactional
-    public ResponseEntity<User> deleteByID(String id){
+    public ResponseEntity<Usuario> deleteByID(String id){
 
         //Verifica se o usuário existe
-        User user = userRepository.findById(id)
+        Usuario user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado"));
 
         userRepository.deleteById(id);

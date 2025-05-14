@@ -1,5 +1,6 @@
 package com.backend.cyberbytes.model;
 
+import com.backend.cyberbytes.dto.UsuarioRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,8 +12,8 @@ import java.util.Collection;
 import java.util.List;
 
 
-@Table(name="users")
-@Entity(name="users")
+@Table(name="usuario")
+@Entity(name="usuario")
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,36 +23,54 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 
 @Component
-public class User implements UserDetails {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private String id;
     @Column(name = "name", nullable = false)
-    private String name;
+    private String nome;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "senha", nullable = false)
+    private String senha;
     @Enumerated(EnumType.STRING)
     @Column(name = "roles" ,nullable = false)
-    private UserRole role;
+    private UsuarioRole role;
 
     //Construtor
+    public Usuario(String nome, String email, String senha){
+        this.nome=nome;
+        this.email=email;
+        this.senha=senha;
+    }
 
+    public Usuario(String nome, String email, String senha, UsuarioRole role){
+        this.nome=nome;
+        this.email=email;
+        this.senha=senha;
+        this.role=role;
+    }
+
+
+    public Usuario(UsuarioRequestDto usuarioRequestDto){
+        this.nome= usuarioRequestDto.nome();
+        this.email= usuarioRequestDto.email();
+        this.senha= usuarioRequestDto.senha();
+    }
 
 
     //Permissões
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == UserRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        if(this.role == UsuarioRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return senha;
     }
 
     @Override

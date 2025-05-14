@@ -2,11 +2,11 @@ package com.backend.cyberbytes.controller;
 
 import com.backend.cyberbytes.dto.AuthenticationDto;
 import com.backend.cyberbytes.dto.LoginResponseDto;
-import com.backend.cyberbytes.dto.UserRequestDto;
-import com.backend.cyberbytes.model.User;
-import com.backend.cyberbytes.repository.UserRepository;
+import com.backend.cyberbytes.dto.UsuarioRequestDto;
+import com.backend.cyberbytes.model.Usuario;
+import com.backend.cyberbytes.repository.UsuarioRepository;
 import com.backend.cyberbytes.service.TokenService;
-import com.backend.cyberbytes.service.UserService;
+import com.backend.cyberbytes.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,13 +23,13 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserRepository userRepository;
+    private UsuarioRepository userRepository;
 
     @Autowired
     private TokenService tokenService;
 
     @Autowired
-    private UserService userService;
+    private UsuarioService usuarioService;
 
 
     /*
@@ -40,7 +40,7 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());//Verifica os dados do usuário
         var auth = this.authenticationManager.authenticate(usernamePassword);//Verifica a autenticação
 
-        var token = tokenService.generateToken((User) auth.getPrincipal());//Gerá um token com os dados do usuário
+        var token = tokenService.generateToken((Usuario) auth.getPrincipal());//Gerá um token com os dados do usuário
         return ResponseEntity.ok(new LoginResponseDto(token));//Status da resposta
     }
 
@@ -48,9 +48,9 @@ public class AuthenticationController {
      * Função para fazer o registro do usuário
      * */
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Valid UserRequestDto data, @RequestParam("tentativa") int tentativa){
+    public ResponseEntity register(@RequestBody @Valid UsuarioRequestDto data, @RequestParam("tentativa") int tentativa){
         try {
-            return userService.registerUser(data, tentativa);
+            return usuarioService.registerUser(data, tentativa);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -1,6 +1,6 @@
 package com.backend.cyberbytes.model;
 
-public enum UserRole {
+public enum UsuarioRole {
     //Autoridades
     ADMIN("admin"),
     USER("user");
@@ -8,7 +8,7 @@ public enum UserRole {
     private String role;
 
     //Construtor
-    UserRole(String role){
+    UsuarioRole(String role){
         this.role = role;
     }
 

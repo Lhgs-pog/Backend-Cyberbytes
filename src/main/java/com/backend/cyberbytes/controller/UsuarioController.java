@@ -1,14 +1,13 @@
 package com.backend.cyberbytes.controller;
 
 
-import com.backend.cyberbytes.dto.UserRequestDto;
-import com.backend.cyberbytes.dto.UserResponseDto;
-import com.backend.cyberbytes.model.User;
+import com.backend.cyberbytes.dto.UsuarioRequestDto;
+import com.backend.cyberbytes.dto.UsuarioResponseDto;
+import com.backend.cyberbytes.model.Usuario;
 import com.backend.cyberbytes.service.CodigoService;
-import com.backend.cyberbytes.service.UserService;
+import com.backend.cyberbytes.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("user")
-public class UserController {
+@RequestMapping("/user")
+public class UsuarioController {
 
     @Autowired
-    private UserService userService;
+    private UsuarioService userService;
 
     @Autowired
     private CodigoService codigoService;
@@ -28,7 +27,7 @@ public class UserController {
      * Retorna todos os usuários
      * */
     @GetMapping
-    public List<UserResponseDto> getAllUsuarios(){
+    public List<UsuarioResponseDto> getAllUsuarios(){
         return userService.findAllUsuarios();
     }
 
@@ -36,7 +35,7 @@ public class UserController {
      * Retorna um usuário específico pelo ID
      * */
     @GetMapping("/{id}")
-    public Optional<User> getUserById(@PathVariable("id")String id){
+    public Optional<Usuario> getUserById(@PathVariable("id")String id){
         return userService.findUsuarioById(id);
     }
 
@@ -44,7 +43,7 @@ public class UserController {
      * Retorna um usuário específico pelo EMAIL
      * */
     @GetMapping("/email/{email}")
-    public Optional<User> getUserByEmail(@PathVariable("email")String email){
+    public Optional<Usuario> getUserByEmail(@PathVariable("email")String email){
         return userService.findUsuarioByEmail(email);
     }
 
@@ -62,7 +61,7 @@ public class UserController {
      * Atualizar dados do usuário
      * */
     @PutMapping("{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") String id, @RequestBody UserRequestDto data) {
+    public ResponseEntity<?> updateUser(@PathVariable("id") String id, @RequestBody UsuarioRequestDto data) {
         return userService.updateUser(id, data);
     }
 

@@ -1,6 +1,6 @@
 package com.backend.cyberbytes.security;
 
-import com.backend.cyberbytes.repository.UserRepository;
+import com.backend.cyberbytes.repository.UsuarioRepository;
 import com.backend.cyberbytes.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,7 +22,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     private TokenService tokenService;
 
     @Autowired
-    private UserRepository userRepository;
+    private UsuarioRepository userRepository;
 
     /*
      * Filtro de requisições http

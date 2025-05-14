@@ -7,7 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
-import com.backend.cyberbytes.model.User;
+import com.backend.cyberbytes.model.Usuario;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -22,7 +22,7 @@ public class TokenService {
     /*
      * Gera o token
      * */
-    public String generateToken(User user){
+    public String generateToken(Usuario user){
         try{
             //cria com a chave secreta
             Algorithm algorithm = Algorithm.HMAC256(secret);
