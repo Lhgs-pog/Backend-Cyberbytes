@@ -3,6 +3,10 @@ package com.backend.cyberbytes.service;
 import Config.IaConfig;
 import com.backend.cyberbytes.dto.IaRequest;
 import com.backend.cyberbytes.dto.IaResponse;
+import com.backend.cyberbytes.dto.PaginaRequestDto;
+import com.backend.cyberbytes.model.Pagina;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +74,10 @@ public class IaService {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString()); //O client envia nossa requição e aguarda a resposta
 
             String json = response.toString(); //Converte o json em string
+            //Cria a página web
+            Pagina pagina = gerarPagina(json);
+            System.out.println(pagina.toString());
+
 
             IaResponse iaResponse = mapper.readValue(json, IaResponse.class); // Converte a string no objeto response
             return iaResponse.getCandidates().get(0).getContent().getParts().get(0).getText(); //Pecorre todos os elementos do objeto até chegar no texto
@@ -91,6 +99,28 @@ public class IaService {
         iaRequest.setContents(List.of(content)); // Adiciona o content ao nosso request
 
         return iaRequest;
+    }
+
+    public Pagina gerarPagina(String json) throws JsonProcessingException {
+        JsonNode node = mapper.readTree(json);
+
+        String modeloPagina = node.path("candidates").get(0)
+                .path("content")
+                .path("parts").get(0)
+                .path("text")
+                .asText();
+
+        JsonNode paginaEstruturada = mapper.readTree(modeloPagina);
+
+        String tituloPrincipal = paginaEstruturada.path("Titulo principal").asText();
+        String tituloSecundario = paginaEstruturada.path("Titulo secundario").asText();
+        String conteudoPrincipal = paginaEstruturada.path("Conteúdo principal").asText();
+        String conteudoSecundario = paginaEstruturada.path("Conteúdo secundário").asText();
+        String conteudoExtra = paginaEstruturada.path("Conteúdo extra").asText();
+
+        PaginaRequestDto dto = new PaginaRequestDto(tituloPrincipal,tituloSecundario, conteudoPrincipal, conteudoSecundario, conteudoExtra);
+        return new Pagina(dto);
+
     }
 
     private String personalidade = """
