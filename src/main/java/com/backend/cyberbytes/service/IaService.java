@@ -54,6 +54,11 @@ public class IaService {
             HttpClient client = HttpClient.newHttpClient();
             IaRequest iaRequest = criarRequest(prompt);
 
+            //Muda o response schema da config
+            IaRequest.GenerationConfig generationConfig = new IaRequest.GenerationConfig();
+            generationConfig.setResponseSchema(responseSchema);
+            iaRequest.setGenerationConfig(generationConfig);
+
             //Criação e configuração da requisiçãao post
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(config.getIaUrl())) //Endereço onde a requisição vai chegar

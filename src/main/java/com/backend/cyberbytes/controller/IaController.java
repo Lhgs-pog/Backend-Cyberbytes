@@ -27,4 +27,15 @@ public class IaController {
             throw new RuntimeException(e);
         }
     }
+
+    @PostMapping("/pagina")
+    public  ResponseEntity<String> criar_pagina(@RequestParam("prompt") String prompt) throws  URISyntaxException, IOException, InterruptedException{
+        try{
+            String resposta = service.criarConteudo(prompt);
+            return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(resposta);
+        } catch (Exception e) {
+            System.out.println("Erro ao tentar fazer requiisção. Exeption: "+ e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 }

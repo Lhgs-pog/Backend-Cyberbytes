@@ -49,6 +49,21 @@ public class IaRequest {
         private String responseMimeType = "application/json";
 
 
+        private String responseSchema = """
+                "type": "object",
+                    "properties": {
+                      "resposta": {
+                        "type": "string",
+                        "description": "A sua resposta para a pergunta ao usuário, seguindo as regras passadas"
+                      }
+                    },
+                    "required": [
+                      "resposta"
+                    ]
+                  }
+                """;
+
+
         public void setMaxOutPutTokens(Integer maxOutPutTokens) {
             this.maxOutPutTokens = maxOutPutTokens;
         }
@@ -56,5 +71,10 @@ public class IaRequest {
         public void setTemperature(Double temperature) {
             this.temperature = temperature;
         }
+
+        public void setResponseSchema(String responseSchema) {
+            this.responseSchema = responseSchema;
+        }
+
     }
 }
