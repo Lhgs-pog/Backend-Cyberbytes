@@ -48,7 +48,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/codigo")
-    public ResponseEntity<String> gerarCodigo(@PathVariable("email") String email){
+    public ResponseEntity<String> gerarCodigo(@RequestBody String email){
         try {
             codigoService.salvarCodigo(email);
         } catch (Exception e) {
