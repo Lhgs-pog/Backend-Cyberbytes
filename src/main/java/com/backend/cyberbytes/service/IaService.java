@@ -42,7 +42,7 @@ public class IaService {
             //OBS: Essa requisição não e assincrona
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString()); //O client envia nossa requição e aguarda a resposta
 
-            String json = response.toString(); //Converte o json em string
+            String json = response.body(); //Converte o json em string
 
             IaResponse iaResponse = mapper.readValue(json, IaResponse.class); // Converte a string no objeto response
             return iaResponse.getCandidates().get(0).getContent().getParts().get(0).getText(); //Pecorre todos os elementos do objeto até chegar no texto
@@ -73,7 +73,7 @@ public class IaService {
             //OBS: Essa requisição não e assincrona
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString()); //O client envia nossa requição e aguarda a resposta
 
-            String json = response.toString(); //Converte o json em string
+            String json = response.body(); //Converte o json em string
             //Cria a página web
             Pagina pagina = gerarPagina(json);
             System.out.println(pagina.toString());

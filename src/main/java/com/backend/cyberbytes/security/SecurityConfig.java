@@ -58,6 +58,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
 
+                        //Configurações do RestController /ia
+                        .requestMatchers(HttpMethod.POST, "/ia/chat").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/ia/pagina").permitAll()
 
                         .anyRequest().authenticated()
                 )
