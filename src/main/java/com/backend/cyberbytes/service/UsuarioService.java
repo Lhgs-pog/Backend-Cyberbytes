@@ -99,11 +99,11 @@ public class UsuarioService {
         //Atualiza o email
         userExists.setEmail(newUser.email());
 
-        //Criptografando nova senha
-        String encryptedPassword = new BCryptPasswordEncoder().encode(newUser.senha());
-
-        //Mudando a senha para a nova
-        userExists.setSenha(encryptedPassword);
+        //Só criptografa se tiver um valor
+        if (newUser.senha() != null && !newUser.senha().isBlank()) {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(newUser.senha());
+            userExists.setSenha(encryptedPassword);
+        }
 
         userRepository.save(userExists);
 
