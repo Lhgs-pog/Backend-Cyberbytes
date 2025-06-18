@@ -1,11 +1,13 @@
 package com.backend.cyberbytes.controller;
 
 
+import com.backend.cyberbytes.dto.ForgotPasswordDto;
 import com.backend.cyberbytes.dto.UsuarioRequestDto;
 import com.backend.cyberbytes.dto.UsuarioResponseDto;
 import com.backend.cyberbytes.model.Usuario;
 import com.backend.cyberbytes.service.CodigoService;
 import com.backend.cyberbytes.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +49,9 @@ public class UsuarioController {
         return userService.findUsuarioByEmail(email);
     }
 
+    /*
+     * Gerar código para criar conta
+     * */
     @PostMapping("/codigo")
     public ResponseEntity<String> gerarCodigo(@RequestBody String email){
         try {
@@ -56,6 +61,29 @@ public class UsuarioController {
         }
         return ResponseEntity.status(HttpStatusCode.valueOf(202)).body("Um email contendo o código de verificação foi enviado");
     }
+
+    /*
+     * Gerar código para alterar senha
+     * */
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> gerarCodigoRecuperacao(@RequestBody String email){
+        try {
+            codigoService.enviarCodAlterarSenha(email);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body("Ouve um erro ao gerar um código");
+        }
+        return ResponseEntity.status(HttpStatusCode.valueOf(202)).body("Um email contendo o código de verificação foi enviado");
+    }
+
+    @PostMapping("/recover-account")
+    public ResponseEntity recuperarConta(@RequestBody @Valid ForgotPasswordDto forgotPasswordDto, @RequestParam("tentativa") int tentativa){
+        try {
+            return userService.changePassword(forgotPasswordDto, tentativa);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
     /*
      * Atualizar dados do usuário

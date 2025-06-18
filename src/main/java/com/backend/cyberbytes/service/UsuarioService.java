@@ -1,5 +1,6 @@
 package com.backend.cyberbytes.service;
 
+import com.backend.cyberbytes.dto.ForgotPasswordDto;
 import com.backend.cyberbytes.dto.UsuarioRequestDto;
 import com.backend.cyberbytes.dto.UsuarioResponseDto;
 import com.backend.cyberbytes.exceptions.ResourceNotFoundException;
@@ -79,6 +80,7 @@ public class UsuarioService {
         return userRepository.findOptionalByEmail(email);
     }
 
+
     /*
     Atualizar o usuário
     * */
@@ -108,6 +110,27 @@ public class UsuarioService {
         userRepository.save(userExists);
 
         return ResponseEntity.ok(userExists);
+    }
+
+
+    public ResponseEntity changePassword(ForgotPasswordDto forgotPasswordDto, int tentativa){
+        //Verifica se o usuário existe
+        Usuario usuario = userRepository.findOptionalByEmail(forgotPasswordDto.email())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado"));
+
+        //Verifica se o código gerado é o mesmo informado
+        if (codigoService.verificarCodigo(forgotPasswordDto.email(), tentativa)) {
+            //Criptografando a senha
+            if(forgotPasswordDto.password() != null && !forgotPasswordDto.password().isBlank()){
+                String encryptedPassword = new BCryptPasswordEncoder().encode(forgotPasswordDto.password());
+                usuario.setSenha(encryptedPassword);
+                // Salvar o usuário atualizado no banco de dados
+                userRepository.save(usuario);
+            }
+            return ResponseEntity.ok("Senha modificada com sucesso!");
+        }
+
+        return ResponseEntity.badRequest().body("Código expirado ou tentativa inválida. Faça uma nova tentaiva de criar uma conta para tentar novamente");
     }
 
     /*

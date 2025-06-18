@@ -40,7 +40,7 @@ public class EmailService {
     /*
      * Envia emails em formato html
      * */
-    public String envirEmailCodigo(String destinatario, String assunto, String conteudo) {
+    public String enviarEmailCodigo(String destinatario, String assunto, String conteudo) {
         try {
             //Criação do objeto
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();

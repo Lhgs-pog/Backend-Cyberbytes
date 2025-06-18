@@ -4,11 +4,11 @@ import com.backend.cyberbytes.model.Codigo;
 import com.backend.cyberbytes.repository.CodigoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Optional;
 
 @Service
 public class CodigoService {
@@ -47,7 +47,7 @@ public class CodigoService {
         repository.save(cod);
 
         //Envio do email em formato html
-        emailServices.envirEmailCodigo(
+        emailServices.enviarEmailCodigo(
                 email,
                 "Verificação de email",
                 String.format("""
@@ -119,10 +119,10 @@ public class CodigoService {
 
     //Método para enviar um código para usuário alterar sua senha
     public void enviarCodAlterarSenha(String email){
-
-        //Deleta um código anterior
-        Codigo codigoa = repository.findByEmail(email);
-        repository.deleteById(codigoa.getId());
+        // Busca um código existente pelo email
+        Optional<Codigo> codigoOptional = Optional.ofNullable(repository.findByEmail(email));
+        // Se existir, deleta o código anterior
+        codigoOptional.ifPresent(codigo -> repository.deleteById(codigo.getId()));
 
         //Informações para salvamento do código
         int codigo = gerarCodigo();
@@ -131,7 +131,7 @@ public class CodigoService {
         repository.save(cod);
 
         //Envio do email em formato html
-        emailServices.envirEmailCodigo(
+        emailServices.enviarEmailCodigo(
                 email,
                 "Redefinição de Senha",
                 String.format("""
@@ -205,20 +205,27 @@ public class CodigoService {
      * Verifica se o código salvo no banco de dados e o informado pelo o usuário são os mesmos
      * */
     public boolean verificarCodigo(String email, int tentativa){
-        //Busca o código salvo no banco de dados
-        Codigo codigo = repository.findByEmail("\"" + email + "\"");
 
-        //Compara a diferença de tempo de quando o códico foi criado e agora
+        Optional<Codigo> optionalCodigo = Optional.ofNullable(repository.findByEmail(email));
+
+        if (optionalCodigo.isEmpty()) {
+            System.out.println("DEBUG: Código não encontrado para o email: " + email);
+            return false;
+        }
+
+        Codigo codigo = optionalCodigo.get();
+
         Duration duration = Duration.between(codigo.getDia(), LocalDateTime.now());
 
-        //Apaga o código do banco estando certo ou não
-        deleteCodigo(codigo);
-
-        //Valida se a tentativa e o código são os mesmos e se ele foi criado a mais de 24h
         if (codigo.getCodigo() == tentativa && duration.toHours() <= 24) {
+            deleteCodigo(codigo);
+            System.out.println("DEBUG: Código válido e não expirado para o email: " + email);
             return true;
+        } else {
+            deleteCodigo(codigo);
+            System.out.println("DEBUG: Código inválido ou expirado para o email: " + email + ", Código fornecido: " + tentativa + ", Horas desde a criação: " + duration.toHours());
+            return false;
         }
-        return false;
     }
 
     /*
