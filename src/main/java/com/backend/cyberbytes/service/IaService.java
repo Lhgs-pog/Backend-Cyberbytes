@@ -75,8 +75,8 @@ public class IaService {
 
             String json = response.body(); //Converte o json em string
             //Cria a página web
-            Pagina pagina = gerarPagina(json);
-            System.out.println(pagina.toString());
+            PaginaRequestDto dto = gerarPagina(json);
+            System.out.println(dto.toString());
 
 
             IaResponse iaResponse = mapper.readValue(json, IaResponse.class); // Converte a string no objeto response
@@ -101,7 +101,7 @@ public class IaService {
         return iaRequest;
     }
 
-    public Pagina gerarPagina(String json) throws JsonProcessingException {
+    public PaginaRequestDto gerarPagina(String json) throws JsonProcessingException {
         JsonNode node = mapper.readTree(json);
 
         String modeloPagina = node.path("candidates").get(0)
@@ -114,12 +114,12 @@ public class IaService {
 
         String tituloPrincipal = paginaEstruturada.path("Titulo principal").asText();
         String tituloSecundario = paginaEstruturada.path("Titulo secundario").asText();
-        String conteudoPrincipal = paginaEstruturada.path("Conteúdo principal").asText();
-        String conteudoSecundario = paginaEstruturada.path("Conteúdo secundário").asText();
-        String conteudoExtra = paginaEstruturada.path("Conteúdo extra").asText();
+        String conteudoPrincipal = paginaEstruturada.path("Conteudo principal").asText();
+        String conteudoSecundario = paginaEstruturada.path("Conteúdo secundario").asText();
+        String conteudoExtra = paginaEstruturada.path("Conteudo extra").asText();
 
         PaginaRequestDto dto = new PaginaRequestDto(tituloPrincipal,tituloSecundario, conteudoPrincipal, conteudoSecundario, conteudoExtra);
-        return new Pagina(dto);
+        return dto;
 
     }
 
