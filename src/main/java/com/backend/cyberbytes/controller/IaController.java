@@ -1,5 +1,6 @@
 package com.backend.cyberbytes.controller;
 
+import com.backend.cyberbytes.dto.PaginaResponseDto;
 import com.backend.cyberbytes.service.IaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -28,9 +29,9 @@ public class IaController {
     }
 
     @PostMapping("/pagina")
-    public  ResponseEntity<String> criar_pagina(@RequestParam("prompt") String prompt) throws  URISyntaxException, IOException, InterruptedException{
+    public ResponseEntity<PaginaResponseDto> criar_pagina(@RequestParam("prompt") String prompt) throws  URISyntaxException, IOException, InterruptedException{
         try{
-            String resposta = service.criarConteudo(prompt);
+            PaginaResponseDto resposta = service.criarConteudo(prompt);
             return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(resposta);
         } catch (Exception e) {
             System.out.println("Erro ao tentar fazer requisção. Exeption: "+ e.getMessage());
