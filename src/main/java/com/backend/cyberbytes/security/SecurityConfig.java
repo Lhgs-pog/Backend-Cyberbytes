@@ -49,7 +49,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/user").permitAll()
 
                         // Configurações do RestController /pagina
-                        .requestMatchers(HttpMethod.GET, "/pagina/**").authenticated()
+                        //Observação: O correto é que apenas usuários com cargo específico façam a requisição post
+                        .requestMatchers(HttpMethod.POST, "/pagina").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/pagina/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/pagina").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/pagina").hasRole("ADMIN")
 

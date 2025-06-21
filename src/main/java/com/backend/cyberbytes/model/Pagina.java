@@ -27,11 +27,11 @@ public class Pagina {
     private String titulo1;
     @Column(name = "subtitulo")
     private String titulo2;
-    @Column(name = "introducao", nullable = false)
+    @Column(name = "introducao", nullable = false, columnDefinition = "TEXT")
     private String conteudo1;
-    @Column(name = "conteudo")
+    @Column(name = "conteudo", columnDefinition = "TEXT")
     private String conteudo2;
-    @Column(name = "conclusao")
+    @Column(name = "conclusao", columnDefinition = "TEXT")
     private String conteudo3;
 
     public Pagina(PaginaRequestDto dto){
