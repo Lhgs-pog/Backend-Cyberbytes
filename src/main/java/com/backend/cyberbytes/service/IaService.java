@@ -4,6 +4,7 @@ import Config.IaConfig;
 import com.backend.cyberbytes.dto.IaRequest;
 import com.backend.cyberbytes.dto.IaResponse;
 import com.backend.cyberbytes.dto.PaginaRequestDto;
+import com.backend.cyberbytes.dto.PaginaResponseDto;
 import com.backend.cyberbytes.model.Pagina;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -53,7 +54,7 @@ public class IaService {
         }
     }
 
-    public String criarConteudo(String prompt) throws URISyntaxException, IOException, InterruptedException {
+    public PaginaResponseDto criarConteudo(String prompt) throws URISyntaxException, IOException, InterruptedException {
         try {
             HttpClient client = HttpClient.newHttpClient();
             IaRequest iaRequest = criarRequest(prompt);
@@ -75,16 +76,14 @@ public class IaService {
 
             String json = response.body(); //Converte o json em string
             //Cria a página web
-            Pagina pagina = gerarPagina(json);
-            System.out.println(pagina.toString());
+            PaginaResponseDto dto = gerarPagina(json);
+            System.out.println(dto.toString());
 
-
-            IaResponse iaResponse = mapper.readValue(json, IaResponse.class); // Converte a string no objeto response
-            return iaResponse.getCandidates().get(0).getContent().getParts().get(0).getText(); //Pecorre todos os elementos do objeto até chegar no texto
+            return dto;
 
         } catch (Exception e){
             System.out.println("Ocorreu um erro ao tentar fazer a requisição. Exeption: "+ e.getMessage());
-            return "Ocorreu um erro ao tentar fazer a requisição. Exeption: "+ e.getMessage();
+            throw new RuntimeException("Ocorreu um erro ao tentar fazer a requisição. Exeption: "+ e.getMessage());
         }
     }
 
@@ -101,7 +100,7 @@ public class IaService {
         return iaRequest;
     }
 
-    public Pagina gerarPagina(String json) throws JsonProcessingException {
+    public PaginaResponseDto gerarPagina(String json) throws JsonProcessingException {
         JsonNode node = mapper.readTree(json);
 
         String modeloPagina = node.path("candidates").get(0)
@@ -114,12 +113,12 @@ public class IaService {
 
         String tituloPrincipal = paginaEstruturada.path("Titulo principal").asText();
         String tituloSecundario = paginaEstruturada.path("Titulo secundario").asText();
-        String conteudoPrincipal = paginaEstruturada.path("Conteúdo principal").asText();
-        String conteudoSecundario = paginaEstruturada.path("Conteúdo secundário").asText();
-        String conteudoExtra = paginaEstruturada.path("Conteúdo extra").asText();
+        String conteudoPrincipal = paginaEstruturada.path("Conteudo principal").asText();
+        String conteudoSecundario = paginaEstruturada.path("Conteúdo secundario").asText();
+        String conteudoExtra = paginaEstruturada.path("Conteudo extra").asText();
 
-        PaginaRequestDto dto = new PaginaRequestDto(tituloPrincipal,tituloSecundario, conteudoPrincipal, conteudoSecundario, conteudoExtra);
-        return new Pagina(dto);
+        PaginaResponseDto dto = new PaginaResponseDto("1",tituloPrincipal,tituloSecundario, conteudoPrincipal, conteudoSecundario, conteudoExtra);
+        return dto;
 
     }
 

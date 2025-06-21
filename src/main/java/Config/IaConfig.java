@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class IaConfig {
 
-    @Value("${ia.url}")
+    @Value("${spring.ia.url}")
     private String url;
 
-    @Value("${ia.apy.key}")
+    @Value("${spring.ia.apy.key}")
     private String apiKey;
 
     public String getIaUrl(){
