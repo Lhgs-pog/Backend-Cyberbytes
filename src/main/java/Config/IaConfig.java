@@ -13,7 +13,9 @@ public class IaConfig {
     @Value("${spring.ia.apy.key}")
     private String apiKey;
 
+    private GeminiInfo info = new GeminiInfo();
+
     public String getIaUrl(){
-        return url + "?key=" + apiKey;
+        return info.getLink() + "?key=" + info.getChave();
     }
 }
