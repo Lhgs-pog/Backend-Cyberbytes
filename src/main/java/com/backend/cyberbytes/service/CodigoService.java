@@ -206,23 +206,23 @@ public class CodigoService {
      * */
     public boolean verificarCodigo(String email, int tentativa){
 
-        Optional<Codigo> optionalCodigo = Optional.ofNullable(repository.findByEmail(email));
+        Optional<Codigo> codigoOptional = Optional.ofNullable(repository.findByEmail("\"" + email + "\""));
 
-        if (optionalCodigo.isEmpty()) {
+        if (codigoOptional.isEmpty()) {
             System.out.println("DEBUG: Código não encontrado para o email: " + email);
             return false;
         }
 
-        Codigo codigo = optionalCodigo.get();
+        Codigo codigo = codigoOptional.get();
 
         Duration duration = Duration.between(codigo.getDia(), LocalDateTime.now());
 
         if (codigo.getCodigo() == tentativa && duration.toHours() <= 24) {
-            deleteCodigo(codigo);
+            deleteCodigo(codigo); // <-- MANTENHA AQUI!
             System.out.println("DEBUG: Código válido e não expirado para o email: " + email);
             return true;
         } else {
-            deleteCodigo(codigo);
+            // REMOVA ESTA LINHA: deleteCodigo(codigo);
             System.out.println("DEBUG: Código inválido ou expirado para o email: " + email + ", Código fornecido: " + tentativa + ", Horas desde a criação: " + duration.toHours());
             return false;
         }
