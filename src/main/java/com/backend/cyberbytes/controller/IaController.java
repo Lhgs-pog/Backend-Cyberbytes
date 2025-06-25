@@ -29,7 +29,7 @@ public class IaController {
     }
 
     @PostMapping("/pagina")
-    public ResponseEntity<PaginaResponseDto> criar_pagina(@RequestParam("prompt") String prompt) throws  URISyntaxException, IOException, InterruptedException{
+    public ResponseEntity<PaginaResponseDto> criar_pagina(@RequestBody String prompt) throws  URISyntaxException, IOException, InterruptedException{
         try{
             PaginaResponseDto resposta = service.criarConteudo(prompt);
             return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(resposta);

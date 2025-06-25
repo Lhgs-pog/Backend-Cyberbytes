@@ -75,6 +75,7 @@ public class IaService {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString()); //O client envia nossa requição e aguarda a resposta
 
             String json = response.body(); //Converte o json em string
+            System.out.println(response.body());
             //Cria a página web
             PaginaResponseDto dto = gerarPagina(json);
             System.out.println(dto.toString());
