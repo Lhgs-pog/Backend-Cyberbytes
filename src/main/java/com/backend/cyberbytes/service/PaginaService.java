@@ -7,8 +7,9 @@ import com.backend.cyberbytes.repository.PaginaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PaginaService {
@@ -39,6 +40,25 @@ public class PaginaService {
         PaginaResponseDto dto = new PaginaResponseDto(pagina);
 
         return dto;
+    }
+
+    /*
+     * Retorna páginas para quando o usuário pesquisar
+     * */
+    public List<PaginaResponseDto> searchPaginasByTituloContaining(String query) {
+        if (query == null || query.isBlank()) {
+            return Collections.emptyList();
+        }
+
+
+        List<Pagina> paginas = repository.findByTitulo1ContainingIgnoreCase(query);
+
+        // Converte cada entidade Pagina em PaginaResponseDto
+        List<PaginaResponseDto> dtos = paginas.stream()
+                .map(PaginaResponseDto::new)
+                .collect(Collectors.toList());
+
+        return dtos;
     }
 
 

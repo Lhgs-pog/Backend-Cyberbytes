@@ -36,6 +36,15 @@ public class PaginaController {
     }
 
     /*
+     * Endpoint: Retorna uma lista de páginas que contêm a string de pesquisa no título.
+     * */
+    @GetMapping("/pesquisar") // Nome do endpoint mais apropriado para pesquisa
+    public ResponseEntity<List<PaginaResponseDto>> searchPaginasByTituloContaining(@RequestParam("query") String query) {
+        List<PaginaResponseDto> dtos = paginaService.searchPaginasByTituloContaining(query);
+        return ResponseEntity.ok(dtos);
+    }
+
+    /*
      * Endpoint: Salva uma página
      * */
     @PostMapping
