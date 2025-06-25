@@ -43,16 +43,16 @@ public class SecurityConfig {
                         // Configurações do RestController /user
                         .requestMatchers(HttpMethod.GET, "/user/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/user/{id}").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/user/{id}").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/user/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/user").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/user/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user").permitAll()
 
                         // Configurações do RestController /pagina
                         //Observação: O correto é que apenas usuários com cargo específico façam a requisição post
-                        .requestMatchers(HttpMethod.POST, "/pagina").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/pagina").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/pagina/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/pagina").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/pagina").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/pagina").hasRole("ADMIN")
 
 
